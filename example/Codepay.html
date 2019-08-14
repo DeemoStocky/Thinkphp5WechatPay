@@ -1,0 +1,62 @@
+<html style="padding:0;margin:0;">
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1" /> 
+    <title>微信支付</title>
+	<link rel="stylesheet" type="text/css" href="__VIEW__/pay/css/crowd.css">
+</head>
+<body style="padding:0;margin:0;background:#ae0000">
+<div style="width:100%;height:auto;overflow:hidden;margin:auto;background:#FfF;margin-top:70px;max-width:420px;">
+	<h2 style="text-align:center;color:#ae0000;margin:30 0 0 0;border-bottom:2px solid #ae0000;width:420px;display:block;margin:auto;line-height:60px;background:#f2f2f2;">微信支付-<?=$state;?></h2>
+	<h1 style="text-align:center;margin:0;color:#ae0000;">￥<span style="font-size:50px;"><?=$money?></span></h1>
+	<div style="margin:auto;text-align:center;width:auto;height:auto;overflow:hidden;background:url(__VIEW__/pay/bg.gif) no-repeat center;padding:10px;display:table">
+		<img alt="加载中" src="/Example/qrcode.html?url={$Code}" style="border:1px solid #ae0000"/>
+	</div>
+	<div id="myDiv" style="color:#ae0000;line-height:60px;font-size:45px;text-align:center"></div>
+</div>	
+
+<header style="top:0px;position:absolute;z-index:-1;">
+        <div class="bg">
+            <canvas id="display"></canvas>
+            <div id="blachole"></div>
+        </div>
+
+    </header>
+
+</body>
+<script src="__VIEW__/jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="__VIEW__/pay/js/constellation.js"></script>
+<script type="text/javascript" src="__VIEW__/layui/layui.js"></script>
+<script>
+var myIntval=setInterval(function(){load()},1000);  
+    function load(){  
+	
+		$.ajax({
+			url:"/Example/orderquery",
+			type:"POST",
+			data:{
+				out_trade_no:"<?=$num?>",
+			},
+			success:function (data){
+				trade_state=data.trade_state;  
+				trade_state_desc=data.trade_state_desc;  
+				
+                if(trade_state=='SUCCESS'){  
+                    document.getElementById("myDiv").innerHTML=trade_state_desc;  
+                    clearInterval(myIntval);  
+                    setTimeout("closed()",1000);  
+
+
+                }else{  
+                    document.getElementById("myDiv").innerHTML=trade_state_desc; 
+                }
+			}
+			
+		});
+          
+    }  
+	function closed(){
+		var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+		parent.layer.close(index);
+	}
+</script>
