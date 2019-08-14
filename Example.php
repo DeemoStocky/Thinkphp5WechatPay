@@ -18,7 +18,7 @@ class example extends controller {
 	        $openId = $tools->GetOpenid();
 	        //②、统一下单
 	        $input = new \WxPayUnifiedOrder();
-	        $input->SetBody("合帮商城-商品支付");        //商品描述
+	        $input->SetBody("商品支付");        //商品描述
 	        $input->SetAttach(input("id"));    //附加数据暂未使用到可以注释掉	
 	        $input->SetOut_trade_no(input("id"));//商户订单号,此处订单号根据实际项目中订单号进行赋值,要求32个字符内，只能是数字、大小写字母_-|* 且在同一个商户号下唯一
 	        $input->SetTotal_fee($OData["order_price"]*100);      //订单总金额，单位为分
