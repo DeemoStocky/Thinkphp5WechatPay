@@ -126,7 +126,7 @@ class example extends controller {
         foreach($data as $key=>$value){
             echo "<font color='#00ff55;'>$key</font> :  ".htmlspecialchars($value, ENT_QUOTES)." <br/>";
         }
-    }
+    } 
     public function notify(){
 		$curl_request = $_SERVER['REQUEST_METHOD']; //获取请求方式
         if($curl_request == 'POST'){ 
