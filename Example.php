@@ -6,7 +6,7 @@ use think\Cookie;
 error_reporting(0);
 
 class example extends controller { 
-	public function pay()
+    public function pay()
     {
         vendor('WeixinPay.example.WxPay#JsApiPay');//引入文件
 		
@@ -14,7 +14,7 @@ class example extends controller {
 			
 	        $tools = new \JsApiPay();
 			
-			$OData=db("order")->where(["order_num"=>input("id"),"user_id"=>Cookie::get('userid','Mine_')])->find();
+		$OData=db("order")->where(["order_num"=>input("id"),"user_id"=>Cookie::get('userid','Mine_')])->find();
 	        $openId = $tools->GetOpenid();
 	        //②、统一下单
 	        $input = new \WxPayUnifiedOrder();
@@ -28,26 +28,26 @@ class example extends controller {
 	        $input->SetNotify_url("/ExampleNotify.html");//异步接收微信支付结果通知的回调地址，通知url必须为外网可访问的url，不能携带参数。
 	        $input->SetTrade_type("JSAPI");
 	        $input->SetOpenid($openId);
-			$config = new \WxPayConfig();
+		$config = new \WxPayConfig();
 	        $order = \WxPayApi::unifiedOrder($config, $input);
-	       // echo '<font color="#f00"><b>订单支付</b></font><br/>';
-	       // $this->printf_info($order);
+	        // echo '<font color="#f00"><b>订单支付</b></font><br/>';
+	        // $this->printf_info($order);
 	        $jsApiParameters = $tools->GetJsApiParameters($order);
  
 	        //获取共享收货地址js函数参数
 	        $editAddress = $tools->GetEditAddressParameters();
             //将数据渲染到模板中或前端页面中
             $this->assign("data",$jsApiParameters);
-			$this->assign("money",$OData["order_price"]);
+	    $this->assign("money",$OData["order_price"]);
             return $this->fetch();
         } catch(Exception $e) {
 	        Log::ERROR(json_encode($e));//此处因为没有使用微信日志方法，所以暂未引入日志类
         }
    
 
-   }
+    }
 	//扫码支付
-	public function CodePay()
+    public function CodePay()
     {
 		
         try{
@@ -91,8 +91,8 @@ class example extends controller {
     // 如果没有http 则添加
     \QRcode::png($url,false,QR_ECLEVEL_L,$size,2,false,0xFFFFFF,0x000000);
     }
-	//查询扫码状态
-	public function orderquery(){
+    //查询扫码状态
+       public function orderquery(){
 		vendor('WeixinPay.lib.WxPay#Notify');
 		if(isset($_REQUEST["out_trade_no"]) && $_REQUEST["out_trade_no"] != ""){
 			try{
@@ -115,19 +115,19 @@ class example extends controller {
 		}
 	}
 	//扫码回调
-	public function ExampleReturn()
+    public function ExampleReturn()
     {
 		vendor('WeixinPay.lib.WxPay#Notify');
         $notify = new \WxPayNotify();
         $notify->Handle();
     }
-	public function printf_info($data)
+    public function printf_info($data)
     {
         foreach($data as $key=>$value){
             echo "<font color='#00ff55;'>$key</font> :  ".htmlspecialchars($value, ENT_QUOTES)." <br/>";
         }
     }
-	public function notify(){
+    public function notify(){
 		$curl_request = $_SERVER['REQUEST_METHOD']; //获取请求方式
         if($curl_request == 'POST'){ 
             $xmldata=file_get_contents("php://input");
@@ -148,15 +148,15 @@ class example extends controller {
 			exit;
             
         }
-	}
+    }
 	
-	private function notifyXmlToArray($xml)
+    private function notifyXmlToArray($xml)
     {
             libxml_disable_entity_loader(true);
             return json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
     }
 	
-	public  function appgetSign($data){
+    public  function appgetSign($data){
 		vendor('WeixinPay.example.WxPay#Config');//引入文件
 		$config = new \WxPayConfig();
 		$appwxpay_key = $config->GetKey();
@@ -172,11 +172,11 @@ class example extends controller {
 		//签名步骤四：所有字符转为大写
 		$result_ = strtoupper($String);
 		return $result_;
-	}
+     }
 	/**
      * 格式化参数格式化成url参数
      */
-	public function callbackToUrlParams($Parameters){
+     public function callbackToUrlParams($Parameters){
         $buff = "";
         foreach ($Parameters as $k => $v){
             if($k != "sign" && $v != "" && !is_array($v)){
@@ -185,12 +185,12 @@ class example extends controller {
         }
         $buff = trim($buff, "&");
         return $buff;
-    }
+     }
 	/**
      * @param  拼装xml数据返回 
      * @author  yangzl <[<email address>]>
      */
-	public  function returnXml(){
+    public  function returnXml(){
         header("Content-type:text/xml;");
         $xml = "<?xml version='1.0' encoding='UTF-8'?>\n";
         $xml .= "<xml>\n";
@@ -200,7 +200,7 @@ class example extends controller {
         echo  $xml;
     }
 	
-	public function state($data){
+    public function state($data){
 		$orders_info = json_decode($data,true);
 		$Num=$orders_info ['attach'];
 		//$Log=db("log")->insert(["log"=>$Num]);保存用户日志
@@ -208,7 +208,7 @@ class example extends controller {
 		if($This["order_state"]=='0'){
 			//数据库操作
 		}
-	}
+    }
 
     public function writeLogs($path,$file,$content,$more=true){
         $newpath = '';
